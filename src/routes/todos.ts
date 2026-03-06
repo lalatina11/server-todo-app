@@ -87,7 +87,7 @@ r.post(
 
 		const [newTodo] = await db
 			.insert(tables.todo)
-			.values(validation.data)
+			.values({ ...validation.data })
 			.returning();
 
 		const data = await db.query.todo.findFirst({
@@ -152,7 +152,7 @@ r.patch(
 
 		await db
 			.update(tables.todo)
-			.set(validation.data)
+			.set({ ...validation.data })
 			.where(eq(tables.todo.id, existingTodo.id));
 
 		const data = await db.query.todo.findFirst({
