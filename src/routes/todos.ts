@@ -91,7 +91,7 @@ r.post(
 			.returning();
 
 		const data = await db.query.todo.findFirst({
-			where: (todoTable, { eq }) => eq(todoTable.id, newTodo.id),
+			where: eq(tables.todo.id, newTodo.id),
 			with: { author: true },
 		});
 
@@ -135,7 +135,7 @@ r.patch(
 		}
 
 		const existingTodo = await db.query.todo.findFirst({
-			where: (todo, { eq }) => eq(todo.id, id),
+			where: eq(tables.todo.id, id),
 			columns: { id: true, authorId: true },
 		});
 
@@ -156,7 +156,7 @@ r.patch(
 			.where(eq(tables.todo.id, existingTodo.id));
 
 		const data = await db.query.todo.findFirst({
-			where: (todoTable, { eq }) => eq(todoTable.id, existingTodo.id),
+			where: eq(tables.todo.id, existingTodo.id),
 			with: { author: true },
 		});
 
@@ -175,7 +175,7 @@ r.delete("/:id{[0-9]+}", zValidator("param", todoParamId), async (c) => {
 	const { id } = c.req.valid("param");
 
 	const existingTodo = await db.query.todo.findFirst({
-		where: (todo, { eq }) => eq(todo.id, id),
+		where: eq(tables.todo.id, id),
 		columns: { id: true, authorId: true },
 	});
 
