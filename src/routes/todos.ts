@@ -1,5 +1,5 @@
 import { zValidator } from "@hono/zod-validator";
-import { eq } from "drizzle-orm";
+import { and, eq, ilike, or, type SQL } from "drizzle-orm";
 import { Hono } from "hono";
 import db from "@/db";
 import tables from "@/db/tables";
@@ -20,18 +20,20 @@ r.get("/", authMiddleware, async (c) => {
 		return c.json({ success: false, message: "Not Auhtorized!" });
 	}
 
+	const filters = [eq(tables.todo.authorId, currentUser.id)] as SQL<unknown>[];
+
+	if (q) {
+		filters.push(
+			or(
+				ilike(tables.todo.title, `%${q}%`),
+				ilike(tables.todo.description, `%${q}%`),
+			) as SQL<unknown>,
+		);
+	}
+
 	const todos = await db.query.todo.findMany({
 		with: { author: true },
-		where: (todoTable, { or, eq, ilike, and }) =>
-			and(
-				eq(todoTable.authorId, currentUser.id),
-				q
-					? or(
-							ilike(todoTable.title, `%${q}%`),
-							ilike(todoTable.description, `%${q}%`),
-						)
-					: undefined,
-			),
+		where: and(...filters),
 	});
 	return c.json({ success: true, message: "OK", data: todos }, 200);
 });
