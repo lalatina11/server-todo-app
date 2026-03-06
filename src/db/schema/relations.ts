@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
-import { todo } from ".";
-import { user } from "./auth-schema";
+import { user } from "./auth-schema.js";
+import { todo } from "./index.js";
 
 export const userRelations = relations(user, ({ many }) => ({
 	todos: many(todo),

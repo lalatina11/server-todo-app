@@ -1,9 +1,9 @@
 import { swaggerUI } from "@hono/swagger-ui";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import api from "./api";
-import ENV from "./lib/env";
-import openApiDoc from "./lib/open-api-docs";
+import api from "./api.js";
+import ENV from "./lib/env.js";
+import openApiDoc from "./lib/open-api-docs.js";
 
 const app = new Hono();
 
