@@ -12,9 +12,11 @@ const pool = new Pool({
 
 const sql = neon(ENV.DATABASE_URL);
 
+const schema = { ...tables };
+
 const db =
 	ENV.NODE_ENV === "production"
-		? drizzleNeon({ client: sql })
-		: drizzle({ client: pool, schema: { ...tables } });
+		? drizzleNeon({ client: sql, schema })
+		: drizzle({ client: pool, schema });
 
 export default db;
