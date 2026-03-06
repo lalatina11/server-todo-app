@@ -1,0 +1,20 @@
+import ENV from "@/lib/env";
+import "dotenv/config";
+import { neon } from "@neondatabase/serverless";
+import { drizzle as drizzleNeon } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import tables from "./tables";
+
+const pool = new Pool({
+	connectionString: ENV.DATABASE_URL,
+});
+
+const sql = neon(ENV.DATABASE_URL);
+
+const db =
+	ENV.NODE_ENV === "production"
+		? drizzleNeon({ client: sql })
+		: drizzle({ client: pool, schema: { ...tables } });
+
+export default db;
