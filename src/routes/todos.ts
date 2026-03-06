@@ -9,7 +9,9 @@ import type { AuthType } from "@/types/auth";
 
 const todoRouter = new Hono<{ Variables: AuthType }>();
 
-todoRouter.get("/", authMiddleware, async (c) => {
+const r = todoRouter;
+
+r.get("/", authMiddleware, async (c) => {
 	const q = c.req.query("q") as string;
 
 	const currentUser = c.get("user");
@@ -34,7 +36,7 @@ todoRouter.get("/", authMiddleware, async (c) => {
 	return c.json({ success: true, message: "OK", data: todos }, 200);
 });
 
-todoRouter.get("/:id{[0-9]+}", zValidator("param", todoParamId), async (c) => {
+r.get("/:id{[0-9]+}", zValidator("param", todoParamId), async (c) => {
 	const { id } = c.req.valid("param");
 
 	const existingTodo = await db.query.todo.findFirst({
@@ -52,7 +54,7 @@ todoRouter.get("/:id{[0-9]+}", zValidator("param", todoParamId), async (c) => {
 	return c.json({ success: true, message: "OK", data: existingTodo }, 200);
 });
 
-todoRouter.post(
+r.post(
 	"/",
 	authMiddleware,
 
@@ -102,7 +104,7 @@ todoRouter.post(
 	},
 );
 
-todoRouter.patch(
+r.patch(
 	"/:id{[0-9]+}",
 	authMiddleware,
 	zValidator("param", todoParamId),
@@ -167,44 +169,40 @@ todoRouter.patch(
 	},
 );
 
-todoRouter.delete(
-	"/:id{[0-9]+}",
-	zValidator("param", todoParamId),
-	async (c) => {
-		const { id } = c.req.valid("param");
+r.delete("/:id{[0-9]+}", zValidator("param", todoParamId), async (c) => {
+	const { id } = c.req.valid("param");
 
-		const existingTodo = await db.query.todo.findFirst({
-			where: (todo, { eq }) => eq(todo.id, id),
-			columns: { id: true, authorId: true },
-		});
+	const existingTodo = await db.query.todo.findFirst({
+		where: (todo, { eq }) => eq(todo.id, id),
+		columns: { id: true, authorId: true },
+	});
 
-		if (!existingTodo) {
-			return c.json(
-				{ success: false, message: `Cannot found todo with ID ${id}` },
-				200,
-			);
-		}
-
-		const currentUser = c.get("user");
-
-		if (!currentUser) {
-			return c.json({ success: false, message: "Not Auhtorized!" });
-		}
-
-		if (existingTodo.authorId !== currentUser.id) {
-			return c.json({ success: false, message: "Not Auhtorized!" });
-		}
-
-		await db.delete(tables.todo).where(eq(tables.todo.id, existingTodo.id));
-
+	if (!existingTodo) {
 		return c.json(
-			{
-				success: true,
-				message: `Todo with ID ${id} has been deleted successfully!`,
-			},
+			{ success: false, message: `Cannot found todo with ID ${id}` },
 			200,
 		);
-	},
-);
+	}
+
+	const currentUser = c.get("user");
+
+	if (!currentUser) {
+		return c.json({ success: false, message: "Not Auhtorized!" });
+	}
+
+	if (existingTodo.authorId !== currentUser.id) {
+		return c.json({ success: false, message: "Not Auhtorized!" });
+	}
+
+	await db.delete(tables.todo).where(eq(tables.todo.id, existingTodo.id));
+
+	return c.json(
+		{
+			success: true,
+			message: `Todo with ID ${id} has been deleted successfully!`,
+		},
+		200,
+	);
+});
 
 export default todoRouter;
