@@ -42,7 +42,7 @@ r.get("/:id{[0-9]+}", zValidator("param", todoParamId), async (c) => {
 	const { id } = c.req.valid("param");
 
 	const existingTodo = await db.query.todo.findFirst({
-		where: (todo, { eq }) => eq(todo.id, id),
+		where: eq(tables.todo.id, id),
 		with: { author: true },
 	});
 
