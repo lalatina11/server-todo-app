@@ -1,4 +1,4 @@
-import ENV from "@/lib/env";
+import ENV from "../lib/env";
 import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle as drizzleNeon } from "drizzle-orm/neon-http";
