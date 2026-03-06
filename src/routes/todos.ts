@@ -76,10 +76,7 @@ r.post(
 			return c.json({ success: false, message: "Not Authenticated!" });
 		}
 
-		const validation = todoSchema.safeParse({
-			...body,
-			authorId: currentUser.id,
-		});
+		const validation = todoSchema.safeParse(body);
 
 		if (!validation.success) {
 			return c.json({ success: false, message: validation.error.message });
@@ -87,7 +84,7 @@ r.post(
 
 		const [newTodo] = await db
 			.insert(tables.todo)
-			.values({ ...validation.data })
+			.values({ ...validation.data, authorId: currentUser.id })
 			.returning();
 
 		const data = await db.query.todo.findFirst({
@@ -128,7 +125,7 @@ r.patch(
 			});
 		}
 
-		const validation = todoSchema.omit({ authorId: true }).safeParse(body);
+		const validation = todoSchema.safeParse(body);
 
 		if (!validation.success) {
 			return c.json({ success: false, message: validation.error.message });
