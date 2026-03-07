@@ -1,6 +1,7 @@
 {
 	"name": "server-todo-app",
 	"version": "1.0.50",
+	"type": "module",
 	"scripts": {
 		"dev": "bun --watch src/index.ts",
 		"start": "bun run src/index.ts",
