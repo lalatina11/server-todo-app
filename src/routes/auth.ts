@@ -34,9 +34,18 @@ r.post("/register", guestMiddleware, async (c) => {
 		});
 	}
 
-	return await auth.api.signUpEmail({
+	const { user, token } = await auth.api.signUpEmail({
 		body: { ...validation.data },
-		asResponse: true,
+	});
+
+	if (!token || !user) {
+		return c.json({ success: false, message: "cannot login user" });
+	}
+
+	return c.json({
+		success: true,
+		message: "success to register",
+		data: { token, user },
 	});
 });
 
@@ -57,9 +66,14 @@ r.post("/login", guestMiddleware, async (c) => {
 		});
 	}
 
-	return await auth.api.signInEmail({
+	const { token, user } = await auth.api.signInEmail({
 		body: { ...validation.data },
-		asResponse: true,
+	});
+
+	return c.json({
+		success: true,
+		message: "success to register",
+		data: { token, user },
 	});
 });
 
