@@ -1,6 +1,5 @@
 {
 	"name": "server-todo-app",
-	"type": "module",
 	"version": "1.0.50",
 	"scripts": {
 		"dev": "bun --watch src/index.ts",
@@ -31,6 +30,5 @@
 		"esbuild": "^0.27.3",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
-	},
-	"module": "src/index.js"
+	}
 }
