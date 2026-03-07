@@ -97,7 +97,7 @@ r.post("/login", guestMiddleware, async (c) => {
 		password: validation.data.password,
 	});
 
-	if (!loginRes.success || !loginRes.data) {
+	if (!loginRes.success || !loginRes.data?.token) {
 		return c.json({ success: false, message: loginRes.message });
 	}
 
