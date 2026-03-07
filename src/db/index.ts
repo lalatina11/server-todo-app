@@ -1,10 +1,10 @@
-import ENV from "../lib/env.js";
+import ENV from "../lib/env";
 import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle as drizzleNeon } from "drizzle-orm/neon-http";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import tables from "./tables.js";
+import tables from "./tables";
 
 const pool = new Pool({
 	connectionString: ENV.DATABASE_URL,
