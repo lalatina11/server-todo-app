@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
-import { auth } from "../lib/auth.js";
-import type { AuthType } from "../types/auth.js";
+import { auth } from "../lib/auth";
+import type { AuthType } from "../types/auth";
 
 export interface MiddlewareContext {
 	Variables: AuthType;

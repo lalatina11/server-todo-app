@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { auth } from "../lib/auth.js";
-import { userSchema } from "../lib/validations/user-schema.js";
+import { auth } from "../lib/auth";
+import { userSchema } from "../lib/validations/user-schema";
 import {
 	authMiddleware,
 	guestMiddleware,
-} from "../middlewares/auth-middleware.js";
+} from "../middlewares/auth-middleware";
 
 const authRouter = new Hono();
 const r = authRouter;

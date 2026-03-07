@@ -1,6 +1,6 @@
 import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
-import { timeStamps } from "../../lib/schema-helper.js";
-import { user } from "./auth-schema.js";
+import { timeStamps } from "../../lib/schema-helper";
+import { user } from "./auth-schema";
 
 export const todo = pgTable("todos", {
 	id: serial().primaryKey(),
