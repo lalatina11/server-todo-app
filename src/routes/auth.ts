@@ -8,6 +8,7 @@ import {
 	authMiddleware,
 	guestMiddleware,
 } from "../middlewares/auth-middleware";
+import { handleLoginRepository } from "../repositories/auth-repository";
 
 const authRouter = new Hono();
 const r = authRouter;
@@ -80,14 +81,30 @@ r.post("/login", guestMiddleware, async (c) => {
 		});
 	}
 
-	const { token, user } = await auth.api.signInEmail({
-		body: { ...validation.data },
+	const countExistingUserByEmail = await db.$count(
+		tables.user,
+		eq(tables.user.email, validation.data.email),
+	);
+
+	const isUserExist = countExistingUserByEmail > 0;
+
+	if (!isUserExist) {
+		return c.json({ success: false, message: "User not exist!" });
+	}
+
+	const loginRes = await handleLoginRepository({
+		email: validation.data.email,
+		password: validation.data.password,
 	});
+
+	if (!loginRes.success || !loginRes.data) {
+		return c.json({ success: false, message: loginRes.message });
+	}
 
 	return c.json({
 		success: true,
 		message: "success to register",
-		data: { token, user },
+		data: loginRes.data,
 	});
 });
 
