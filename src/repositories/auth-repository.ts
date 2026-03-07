@@ -17,7 +17,7 @@ export const handleLoginRepository = async ({
 			// This endpoint requires session cookies.
 		});
 		return {
-			success: false,
+			success: true,
 			message: "Success",
 			data: { token: result.token, user: result.user },
 		};
