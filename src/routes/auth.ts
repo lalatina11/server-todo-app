@@ -1,4 +1,7 @@
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
+import db from "../db";
+import tables from "../db/tables";
 import { auth } from "../lib/auth";
 import { userSchema } from "../lib/validations/user-schema";
 import {
@@ -34,7 +37,18 @@ r.post("/register", guestMiddleware, async (c) => {
 		});
 	}
 
-	const { user, token } = await auth.api.signUpEmail({
+	const countExistingEmail = await db.$count(
+		tables.user,
+		eq(tables.user.email, validation.data.email),
+	);
+
+	const isEmailExist = countExistingEmail > 0;
+
+	if (isEmailExist) {
+		return c.json({ success: false, message: "Email already taken" });
+	}
+
+	const { token, user } = await auth.api.signUpEmail({
 		body: { ...validation.data },
 	});
 
