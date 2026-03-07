@@ -45,7 +45,7 @@ export const handleLoginRepository = async ({
 				default:
 					return {
 						success: false,
-						message: "An unexpected error occurred",
+						message: "Invalid Password!",
 						data: null,
 					};
 			}
