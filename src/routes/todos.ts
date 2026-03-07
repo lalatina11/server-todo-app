@@ -1,11 +1,11 @@
 import { zValidator } from "@hono/zod-validator";
 import { and, eq, ilike, or, type SQL } from "drizzle-orm";
 import { Hono } from "hono";
-import db from "../db/index";
-import tables from "../db/tables";
-import { todoParamId, todoSchema } from "../lib/validations/todo-schema";
-import { authMiddleware } from "../middlewares/auth-middleware";
-import type { AuthType } from "../types/auth";
+import db from "../db/index.js";
+import tables from "../db/tables.js";
+import { todoParamId, todoSchema } from "../lib/validations/todo-schema.js";
+import { authMiddleware } from "../middlewares/auth-middleware.js";
+import type { AuthType } from "../types/auth.js";
 
 const todoRouter = new Hono<{ Variables: AuthType }>();
 
