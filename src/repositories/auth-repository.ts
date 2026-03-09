@@ -58,3 +58,18 @@ export const handleLoginRepository = async ({
 		}
 	}
 };
+
+export const handleLogOutRepository = async (headers: Headers) => {
+	try {
+		await auth.api.signOut({
+			headers,
+		});
+		return { success: true, message: "Success to logout" };
+	} catch {
+		return {
+			success: false,
+			message: "An unexpected error occurred",
+			data: null,
+		};
+	}
+};

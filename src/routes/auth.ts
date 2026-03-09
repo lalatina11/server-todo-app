@@ -8,7 +8,10 @@ import {
 	authMiddleware,
 	guestMiddleware,
 } from "../middlewares/auth-middleware";
-import { handleLoginRepository } from "../repositories/auth-repository";
+import {
+	handleLoginRepository,
+	handleLogOutRepository,
+} from "../repositories/auth-repository";
 
 const authRouter = new Hono();
 const r = authRouter;
@@ -109,10 +112,11 @@ r.post("/login", guestMiddleware, async (c) => {
 });
 
 r.post("/logout", authMiddleware, async (c) => {
-	return await auth.api.signOut({
-		headers: c.req.raw.headers,
-		asResponse: true,
-	});
+	const res = await handleLogOutRepository(c.req.raw.headers);
+	if (!res.success) {
+		return c.json({ success: false, message: res.message });
+	}
+	return c.json({ success: true, message: "Success to logout" });
 });
 
 export default authRouter;
